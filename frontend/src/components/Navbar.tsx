@@ -30,11 +30,11 @@ export const Navbar: React.FC = () => {
                             }}
                         >
                             <BookOpen size={18} />
-                            Cookbook
+                            <span className="hide-on-mobile">Cookbook</span>
                         </Link>
                         <Link to="/save" className="btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.95rem', width: 'auto' }}>
                             <PlusCircle size={18} />
-                            Add Recipe
+                            <span className="hide-on-mobile">Add Recipe</span>
                         </Link>
                         <div style={{ width: '1px', height: '2rem', background: 'rgba(255,255,255,0.1)', margin: '0 0.5rem' }} />
                         <button onClick={handleLogout} className="btn-icon text-muted" title="Logout" style={{ padding: '0.5rem' }}>
@@ -45,11 +45,11 @@ export const Navbar: React.FC = () => {
                     <>
                         <Link to="/login" className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <LogIn size={18} />
-                            Sign In
+                            <span className="hide-on-mobile">Sign In</span>
                         </Link>
                         <Link to="/register" className="btn-primary" style={{ padding: '0.6rem 1.2rem', fontSize: '0.95rem', width: 'auto' }}>
                             <UserPlus size={18} />
-                            Register
+                            <span className="hide-on-mobile">Register</span>
                         </Link>
                     </>
                 )}

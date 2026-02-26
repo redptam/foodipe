@@ -7,6 +7,7 @@
         "start": "docker-compose up -d",
         "stop": "docker-compose down",
         "build": "docker build -t foodipe-prod .",
+        "push": "docker tag foodipe-prod registry.redptam.com/foodipe-prod:latest && docker push registry.redptam.com/foodipe-prod:latest",
         "prod": "docker run -d -p 3000:3000 --network foodipe_default --name foodipe-prod --env-file ./backend/.env foodipe-prod"
     }
 }

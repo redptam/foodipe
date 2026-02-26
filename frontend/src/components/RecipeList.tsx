@@ -22,6 +22,27 @@ export const RecipeList: React.FC<RecipeListProps> = ({ searchQuery, onSearchCha
     const [editForm, setEditForm] = useState<{ name: string, ingredients: Ingredient[], instructions: string[], tags: string[] }>({ name: '', ingredients: [], instructions: [], tags: [] });
     const [isSavingEdit, setIsSavingEdit] = useState(false);
 
+    const [expandedIngredients, setExpandedIngredients] = useState<Set<string>>(new Set());
+    const [expandedInstructions, setExpandedInstructions] = useState<Set<string>>(new Set());
+
+    const toggleExpandedIngredient = (id: string) => {
+        setExpandedIngredients(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
+    const toggleExpandedInstruction = (id: string) => {
+        setExpandedInstructions(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
     const startEdit = (recipe: SavedRecipe) => {
         setEditingId(recipe._id);
         setEditForm({ name: recipe.name, ingredients: recipe.ingredients, instructions: recipe.instructions || [], tags: recipe.tags || [] });
@@ -234,29 +255,41 @@ export const RecipeList: React.FC<RecipeListProps> = ({ searchQuery, onSearchCha
 
                                 <div style={{ display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                                     <h4 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontWeight: 500 }}>Ingredients</h4>
-                                    {recipe.ingredients.slice(0, 8).map((ing, i) => (
+                                    {(expandedIngredients.has(recipe._id) ? recipe.ingredients : recipe.ingredients.slice(0, 8)).map((ing, i) => (
                                         <p key={i} className="recipe-ingredient">
                                             <strong>{ing.amount}</strong> {ing.name}
                                         </p>
                                     ))}
                                     {recipe.ingredients.length > 8 && (
-                                        <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                                            + {recipe.ingredients.length - 8} more ingredients
-                                        </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleExpandedIngredient(recipe._id)}
+                                            style={{ fontSize: '0.85rem', color: 'var(--accent-button)', marginTop: '0.5rem', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, position: 'relative', zIndex: 2 }}
+                                        >
+                                            {expandedIngredients.has(recipe._id) ? "- Show less" : `+ ${recipe.ingredients.length - 8} more ingredients`}
+                                        </button>
                                     )}
                                 </div>
 
                                 {recipe.instructions && recipe.instructions.length > 0 && (
                                     <div style={{ display: 'flex', flexDirection: 'column', marginTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '1.5rem' }}>
-                                        <h4 style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontWeight: 500 }}>Instructions</h4>
-                                        <div className="space-y-3" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                            {recipe.instructions.map((step, i) => (
-                                                <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                                                    <span style={{ color: 'var(--accent-button)', fontWeight: 600, minWidth: '1.5rem' }}>{i + 1}.</span>
-                                                    <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>{step}</p>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleExpandedInstruction(recipe._id)}
+                                            style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', position: 'relative', zIndex: 2 }}
+                                        >
+                                            {expandedInstructions.has(recipe._id) ? "- Hide Instructions" : "+ Instructions"}
+                                        </button>
+                                        {expandedInstructions.has(recipe._id) && (
+                                            <div className="space-y-3" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                                                {recipe.instructions.map((step, i) => (
+                                                    <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                                                        <span style={{ color: 'var(--accent-button)', fontWeight: 600, minWidth: '1.5rem' }}>{i + 1}.</span>
+                                                        <p style={{ fontSize: '0.95rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>{step}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
