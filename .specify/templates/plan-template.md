@@ -31,7 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Web-Based Architecture**: Does the feature cleanly separate frontend (React) and backend (Node.js) responsibilities?
+- [ ] **API-Driven Client/Server Separation**: Is the API communication secure and well-defined?
+- [ ] **Document Database Standard**: Is the data model designed for a document database (e.g., MongoDB)?
+- [ ] **Code Quality and Maintainability**: Will the code follow established formatting, linting, and documentation standards?
+- [ ] **Testing Standards**: Does the plan include specific unit, integration, and E2E tests?
+- [ ] **User Experience Consistency**: Does the feature use consistent UI patterns and ensure accessibility and responsiveness?
+- [ ] **Performance Requirements**: Are performance implications (e.g., bundle size, API response time, database indexing) addressed?
+- [ ] **Component-Driven UI**: Is the UI design modular and reusable?
 
 ## Project Structure
 

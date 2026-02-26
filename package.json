@@ -1,0 +1,12 @@
+{
+    "name": "foodipe-root",
+    "version": "1.0.0",
+    "description": "Premium Recipe Saver",
+    "private": true,
+    "scripts": {
+        "start": "docker-compose up -d",
+        "stop": "docker-compose down",
+        "build": "docker build -t foodipe-prod .",
+        "prod": "docker run -d -p 3000:3000 --network foodipe_default --name foodipe-prod --env-file ./backend/.env foodipe-prod"
+    }
+}

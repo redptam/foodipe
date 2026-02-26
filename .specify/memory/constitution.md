@@ -1,50 +1,56 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report:
+- Version change: 1.1.0 → 1.2.0
+- Added Principles: Code Quality and Maintainability, Performance Requirements
+- Modified Principles: Test-Driven Quality → Testing Standards, User-Centric Design → User Experience Consistency
+- Removed sections: None
+- Templates requiring updates: 
+  - ✅ .specify/templates/plan-template.md
+- Follow-up TODOs: None
+-->
+# Foodipe Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Web-Based Architecture
+The application MUST be a web-based platform. The frontend MUST be built using React. The backend MUST be built using Node.js (v24 LTS).
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. API-Driven Client/Server Separation
+The system MUST consist of strictly separated client and server applications. Communication between the React frontend and Node.js backend MUST occur exclusively via a secure API (e.g., REST or GraphQL over HTTPS).
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Document Database Standard
+Data MUST be stored in a document-based database. **MongoDB** is the recommended standard for this stack due to its native JSON/BSON compatibility with Node.js and React, flexibility with unstructured data, and rich ecosystem.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Code Quality and Maintainability
+The application MUST adhere to strict code quality guidelines. Code should be clean, readable, well-documented, and follow consistent formatting and linting rules. Technical debt should be managed proactively.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Testing Standards
+Critical business logic MUST have comprehensive unit tests. Core user journeys MUST be covered by integration and end-to-end tests. Code coverage metrics should be maintained, and tests MUST pass in CI/CD pipelines before any code is merged.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. User Experience Consistency
+All features MUST prioritize a consistent and intuitive user experience. The application MUST be mobile-first, responsive, and accessible (WCAG compliant). UI components and design patterns should be reused to ensure familiarity across the platform.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### VII. Performance Requirements
+The application MUST perform efficiently under load. Frontend components should be optimized for fast rendering and minimal bundle sizes. Backend APIs MUST respond quickly, utilizing appropriate caching and database indexing strategies.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### VIII. Component-Driven UI
+The React UI MUST be built with reusable, encapsulated components. Components should have clear properties, manage own state when appropriate, and avoid direct dependency on global state where possible to ensure reusability.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Technology Standards
+
+- **Frontend**: React
+- **Backend**: Node.js v24 LTS
+- **Database**: Document Database (MongoDB recommended)
+- **Communication**: Secure API
+
+All new code MUST follow the established linting and formatting rules. The primary tech stack should remain consistent unless there is a strong justification and team consensus for introducing new technologies.
+
+## Development Workflow
+
+- All changes MUST be proposed via Pull Requests.
+- Code review is REQUIRED for all changes bridging to production.
+- CI/CD pipelines MUST pass (linting, tests, build) before merging.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution supersedes all other practices. Amendments require documentation, team approval, and a clear migration plan for existing code if the rules change. Every PR review MUST verify compliance with these principles.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.2.0 | **Ratified**: 2026-02-21 | **Last Amended**: 2026-02-22
