@@ -11,5 +11,11 @@ COPY backend/package*.json ./
 RUN npm install
 COPY backend/ ./
 COPY --from=frontend-builder /app/frontend/dist ./public
+
+# Create and use a non-root user
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser \
+    && chown -R appuser:appgroup /app
+USER appuser
+
 EXPOSE 3000
 CMD ["npm", "start"]

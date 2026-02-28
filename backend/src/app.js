@@ -1,5 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import recipeRoutes from './api/recipeRoutes.js';
@@ -9,11 +12,51 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// ── Security headers ──────────────────────────────────────────────────────────
+app.use(helmet());
 
-// Routes
+// ── CORS ──────────────────────────────────────────────────────────────────────
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    : ['http://localhost:5173'];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow server-to-server / curl / mobile (no origin header)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,   // Required for HttpOnly cookies
+}));
+
+// ── Body parsing (size-limited) ───────────────────────────────────────────────
+app.use(express.json({ limit: '50kb' }));
+app.use(cookieParser());
+
+// ── Rate limiting ─────────────────────────────────────────────────────────────
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20,
+    message: { message: 'Too many attempts. Please try again in 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const apiLimiter = rateLimit({
+    windowMs: 60 * 1000,  // 1 minute
+    max: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use('/api/users/login', authLimiter);
+app.use('/api/users/register', authLimiter);
+app.use('/api/', apiLimiter);
+
+// ── Routes ────────────────────────────────────────────────────────────────────
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 
@@ -21,13 +64,18 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-// Base error handler
+// ── Global error handler ──────────────────────────────────────────────────────
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong on the server' });
+    console.error('[ERROR]', err.stack);
+    const status = err.statusCode || 500;
+    // Only expose the message for non-500 errors; 500s always get a generic message
+    res.status(status).json({
+        message: status === 500 ? 'An internal server error occurred.' : err.message,
+    });
 });
 
-// Serve frontend in production
+// ── Serve frontend in production ──────────────────────────────────────────────
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../public')));
 

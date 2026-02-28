@@ -23,7 +23,13 @@ export const LoginPage: React.FC = () => {
             setAuthUser(user);
             navigate('/cookbook');
         } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to login. Please check your credentials.');
+            const data = err.response?.data;
+            if (data?.errors) {
+                const firstError = Object.values(data.errors)[0] as string[];
+                setError(firstError?.[0] || data.message || 'Failed to login. Please check your credentials.');
+            } else {
+                setError(data?.message || 'Failed to login. Please check your credentials.');
+            }
         } finally {
             setIsLoading(false);
         }

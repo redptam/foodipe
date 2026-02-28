@@ -8,15 +8,17 @@ export const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         navigate('/login');
     };
 
     return (
         <nav className="glass-panel" style={{ padding: '1rem 2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span className="page-title" style={{ fontSize: '1.75rem', marginBottom: 0 }}>Foodipe</span>
+                <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <span className="page-title" style={{ fontSize: '1.75rem', marginBottom: 0, cursor: 'pointer' }}>Foodipe</span>
+                </Link>
             </div>
             <div className="flex-row">
                 {user ? (

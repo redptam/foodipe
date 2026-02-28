@@ -1,18 +1,20 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import axios from 'axios';
 
 export interface User {
     _id: string;
     name: string;
     email: string;
     role: 'user' | 'admin';
-    token: string;
+    // NOTE: 'token' field intentionally removed — token lives in an HttpOnly cookie
+    //       and is never accessible to JavaScript.
 }
 
 interface AuthContextType {
     user: User | null;
     login: (userData: User) => void;
-    logout: () => void;
+    logout: () => Promise<void>;
     isLoading: boolean;
 }
 
@@ -23,14 +25,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Check local storage for existing user session
-        const storedUser = localStorage.getItem('foodipe_user');
+        // Restore session from sessionStorage (user identity only — no token)
+        // The actual auth token is in an HttpOnly cookie managed by the browser.
+        const storedUser = sessionStorage.getItem('foodipe_user');
         if (storedUser) {
             try {
                 setUser(JSON.parse(storedUser));
-            } catch (error) {
-                console.error('Failed to parse stored user data', error);
-                localStorage.removeItem('foodipe_user');
+            } catch {
+                sessionStorage.removeItem('foodipe_user');
             }
         }
         setIsLoading(false);
@@ -38,12 +40,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = (userData: User) => {
         setUser(userData);
-        localStorage.setItem('foodipe_user', JSON.stringify(userData));
+        // Store only non-sensitive user identity (no token!) for UI hydration across refreshes
+        sessionStorage.setItem('foodipe_user', JSON.stringify(userData));
     };
 
-    const logout = () => {
+    const logout = async () => {
+        try {
+            // Ask server to clear the HttpOnly cookie
+            await axios.post('/api/users/logout', {}, { withCredentials: true });
+        } catch {
+            // Proceed with client-side cleanup even if server call fails
+        }
         setUser(null);
-        localStorage.removeItem('foodipe_user');
+        sessionStorage.removeItem('foodipe_user');
     };
 
     return (
