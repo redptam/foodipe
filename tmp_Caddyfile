@@ -1,0 +1,28 @@
+registry.redptam.com {
+    reverse_proxy registry:5000
+    
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+    }
+
+    log {
+        output file /data/registry_access.log
+    }
+}
+
+foodipe.redptam.com {
+    reverse_proxy foodipe-frontend:80
+    
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Frame-Options "DENY"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer-when-downgrade"
+    }
+
+    log {
+        output file /data/foodipe_access.log
+    }
+}

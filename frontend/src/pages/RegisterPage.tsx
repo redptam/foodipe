@@ -15,11 +15,14 @@ export const RegisterPage: React.FC = () => {
     const navigate = useNavigate();
     const { login: setAuthUser } = useAuth();
 
+    const passwordsMatch = password === confirmPassword;
+    const showMismatchedError = confirmPassword.length > 0 && !passwordsMatch;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        if (password !== confirmPassword) {
+        if (!passwordsMatch) {
             setError('Passwords do not match');
             return;
         }
@@ -92,15 +95,21 @@ export const RegisterPage: React.FC = () => {
                         <input
                             id="confirmPassword"
                             type="password"
-                            className="premium-input"
+                            className={`premium-input ${showMismatchedError ? 'error-border' : ''}`}
+                            style={showMismatchedError ? { borderColor: 'var(--accent-danger)', boxShadow: '0 0 0 1px var(--accent-danger)' } : {}}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             placeholder="••••••••"
                         />
+                        {showMismatchedError && (
+                            <span style={{ color: 'var(--accent-danger)', fontSize: '0.75rem', marginTop: '0.4rem', display: 'block' }}>
+                                Passwords do not match
+                            </span>
+                        )}
                     </div>
 
-                    <button type="submit" className="btn-primary" disabled={isLoading} style={{ marginTop: '1rem', width: '100%', padding: '1rem' }}>
+                    <button type="submit" className="btn-primary" disabled={isLoading || !passwordsMatch} style={{ marginTop: '1rem', width: '100%', padding: '1rem' }}>
                         {isLoading ? <Loader2 className="spin" size={20} /> : 'Create Account'}
                     </button>
 

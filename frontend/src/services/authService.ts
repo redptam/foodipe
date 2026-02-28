@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { User } from '../context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // withCredentials ensures the HttpOnly auth cookie is sent with every request
 export const register = async (userData: { name: string; email: string; password: string }): Promise<User> => {

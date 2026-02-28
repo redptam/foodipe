@@ -1,8 +1,5 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
     image: registry.redptam.com/foodipe-backend:latest
     environment:
       - NODE_ENV=production
@@ -15,12 +12,8 @@ services:
     restart: always
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
     image: registry.redptam.com/foodipe-frontend:latest
-    ports:
-      - "80:80"
+    container_name: foodipe-frontend
     environment:
       - VITE_API_URL=/api
     depends_on:
@@ -34,7 +27,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-    # No host port binding — DB only reachable within Docker network
     volumes:
       - mongo-data:/data/db
     deploy:
@@ -44,3 +36,8 @@ services:
 
 volumes:
   mongo-data:
+
+networks:
+  default:
+    name: docker-registry_default
+    external: true

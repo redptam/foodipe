@@ -12,6 +12,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Trust the proxy chain: Caddy -> Nginx -> Express
+// 2 means trust the last two hops
+app.set('trust proxy', 2);
+
 // ── Security headers ──────────────────────────────────────────────────────────
 app.use(helmet());
 
