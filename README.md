@@ -24,7 +24,7 @@ In the root directory, there are two `frontend/` and `backend/` directories. Bef
    ```env
    PORT=3000
    MONGODB_URI=mongodb://mongo:27017/foodipe
-   AUTH_SECRET=local_dev_secret_key_123
+   JWT_SECRET=local_dev_secret_key_123
    OPENAI_API_KEY=YOUR_KEY_HERE
    ```
    *Replace `YOUR_KEY_HERE` with your actual OpenAI API key.*
